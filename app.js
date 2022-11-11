@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import express from "express";
-import { VerifyDiscordRequest, DiscordRequest } from './utils';
+import { VerifyDiscordRequest, DiscordRequest, HasGuildCommands } from './utils';
+import {
+    PING_COMMAND
+} from './commands';
 
 const app = express();
 const PORT = 3000;
@@ -10,7 +13,7 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY)}));
 app.post('/interactions', async function (req, res) {
     const { type, id, data } = req.body;
 
-    if (type === InteractionType.APPLICATION_COMMAND) {
+    if (type === 2) { //APPLICATION_COMMAND = 2
         const { name } = data;
     
         if (name === 'ping') {
@@ -18,7 +21,7 @@ app.post('/interactions', async function (req, res) {
             return res.send({
                 type: 4, // CHANNEL_MESSAGE_WITH_SOURCE
                 data: {
-                    content: 'Hello, world!'
+                    content: 'Pong'
                 },
             });
         }
@@ -26,5 +29,7 @@ app.post('/interactions', async function (req, res) {
 })
 
 app.listen(PORT, () => {
-    console.log('Listening on port')
+    HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [
+        PING_COMMAND,
+    ]);
 })
