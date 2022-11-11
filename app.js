@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import express from "express";
-import { VerifyDiscordRequest, DiscordRequest, HasGuildCommands } from './utils';
+import { VerifyDiscordRequest, HasGuildCommands } from './utils.js';
 import {
     PING_COMMAND
-} from './commands';
+} from './commands.js';
 
 const app = express();
 const PORT = 3000;
