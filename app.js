@@ -13,6 +13,10 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY)}));
 app.post('/interactions', async function (req, res) {
     const { type, id, data } = req.body;
 
+    if (type === 1) {
+        return res.send({ type: 1})
+    }
+
     if (type === 2) { //APPLICATION_COMMAND = 2
         const { name } = data;
     
