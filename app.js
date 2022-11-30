@@ -2,14 +2,14 @@
 import 'dotenv/config';
 import express from 'express';
 import { VerifyDiscordRequest, HasGuildCommands } from './utils.js';
-import {
-  PING_COMMAND,
-} from './commands.js';
+import commands from './commands.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
+
+app.get('/', async (req, res) => res.send('<h1>Hello, World!</h1>'));
 
 app.post('/interactions', async (req, res) => {
   // eslint-disable-next-line no-unused-vars
@@ -24,10 +24,12 @@ app.post('/interactions', async (req, res) => {
 
     if (name === 'ping') {
       // Send a message into the channel where command was triggered from
+      const timestamp = req.get('X-Signature-Timestamp');
+
       return res.send({
         type: 4, // CHANNEL_MESSAGE_WITH_SOURCE
         data: {
-          content: 'Pong',
+          content: `pong (${Date.now() - (`${timestamp}000`)} ms)`,
         },
       });
     }
@@ -37,8 +39,6 @@ app.post('/interactions', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [
-    PING_COMMAND,
-  ]);
+  HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, commands);
   console.log('Listening on port', PORT);
 });

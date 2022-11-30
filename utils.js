@@ -77,5 +77,5 @@ async function HasGuildCommand(appId, guildId, command) {
 export async function HasGuildCommands(appId, guildId, commands) {
   if (guildId === '' || appId === '') return;
 
-  commands.forEach((c) => HasGuildCommand(appId, guildId, c));
+  Object.values(commands).forEach((c) => HasGuildCommand(appId, guildId, c));
 }
