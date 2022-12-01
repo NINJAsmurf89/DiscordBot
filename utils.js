@@ -41,8 +41,8 @@ async function DiscordRequest(endpoint, options) {
   return res;
 }
 
-async function InstallGuildCommand(appID, guildID, command) {
-  const endpoint = `applications/${appID}/guilds/${guildID}/commands`;
+async function InstallGuildCommand(appId, guildId, command) {
+  const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
   try {
     await DiscordRequest(endpoint, { method: 'POST', body: command });
   } catch (err) {
@@ -50,8 +50,35 @@ async function InstallGuildCommand(appID, guildID, command) {
   }
 }
 
+async function UninstallGuildCommand(appId, guildId, commandId) {
+  const endpoint = `applications/${appId}/guilds/${guildId}/commands/${commandId}`;
+  try {
+    await DiscordRequest(endpoint, { method: 'DELETE' });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 // Checks for a command
-async function HasGuildCommand(appId, guildId, command) {
+async function HasGuildCommand(appId, guildId, installedNames, command) {
+  if (!installedNames.includes(command.name)) {
+    console.log(`Installing "${command.name}"`);
+    InstallGuildCommand(appId, guildId, command);
+  } else {
+    console.log(`"${command.name}" command already installed`);
+  }
+}
+
+async function HasDiscontinuedGuildCommand(appId, guildId, localNames, command) {
+  if (!localNames.includes(command.name)) {
+    console.log(`Uninstalling "${command.name}"`);
+    UninstallGuildCommand(appId, guildId, command.id);
+  }
+}
+
+export async function HasGuildCommands(appId, guildId, commands) {
+  if (guildId === '' || appId === '') return;
+
   // API endpoint to get and post guild commands
   const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
 
@@ -60,22 +87,14 @@ async function HasGuildCommand(appId, guildId, command) {
     const data = await res.json();
 
     if (data) {
-      const installedNames = data.map((c) => c.name);
       // This is just matching on the name, so it's not good for updates
-      if (!installedNames.includes(command.name)) {
-        console.log(`Installing "${command.name}"`);
-        InstallGuildCommand(appId, guildId, command);
-      } else {
-        console.log(`"${command.name}" command already installed`);
-      }
+      const installedNames = data.map((c) => c.name);
+      const localNames = Object.values(commands).map((c) => c.name);
+
+      data.forEach((c) => HasDiscontinuedGuildCommand(appId, guildId, localNames, c));
+      Object.values(commands).forEach((c) => HasGuildCommand(appId, guildId, installedNames, c));
     }
   } catch (err) {
     console.error(err);
   }
-}
-
-export async function HasGuildCommands(appId, guildId, commands) {
-  if (guildId === '' || appId === '') return;
-
-  Object.values(commands).forEach((c) => HasGuildCommand(appId, guildId, c));
 }
