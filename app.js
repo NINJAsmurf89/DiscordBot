@@ -2,7 +2,7 @@
 import 'dotenv/config';
 import express from 'express';
 import { VerifyDiscordRequest, HasGuildCommands } from './utils.js';
-import commands from './commands.js';
+import commands, { responses } from './commands.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,17 +21,10 @@ app.post('/interactions', async (req, res) => {
 
   if (type === 2) { // APPLICATION_COMMAND = 2
     const { name } = data;
-
-    if (name === 'ping') {
-      // Send a message into the channel where command was triggered from
-      const timestamp = req.get('X-Signature-Timestamp');
-
-      return res.send({
-        type: 4, // CHANNEL_MESSAGE_WITH_SOURCE
-        data: {
-          content: `pong (${Date.now() - (`${timestamp}000`)} ms)`,
-        },
-      });
+    try {
+      return responses[name](req, res);
+    } catch (err) {
+      console.error(err);
     }
   }
 
