@@ -2,7 +2,7 @@
 import 'dotenv/config';
 import express from 'express';
 import { VerifyDiscordRequest, HasGuildCommands } from './utils.js';
-import commands, { responses } from './commands.js';
+import { commands, responses } from './commands.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,7 +22,7 @@ app.post('/interactions', async (req, res) => {
   if (type === 2) { // APPLICATION_COMMAND = 2
     const { name } = data;
     try {
-      return responses[name](req, res);
+      return res.send(responses[name](req));
     } catch (err) {
       console.error(err);
     }
