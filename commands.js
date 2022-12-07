@@ -12,15 +12,22 @@ export const commands = {
   },
 };
 
+export function TimestampFromSnowFlake(snowflake) {
+  // eslint-disable-next-line no-bitwise
+  return Number(BigInt(snowflake) >> 22n) + 1420070400000;
+}
+
 export const responses = {
   ping: function ping(req) {
     // Send a message into the channel where command was triggered from
-    const timestamp = req.get('X-Signature-Timestamp');
+    const now = Date.now();
+    // eslint-disable-next-line no-bitwise
+    const timestamp = TimestampFromSnowFlake(req.body.id);
 
     return {
       type: 4, // CHANNEL_MESSAGE_WITH_SOURCE
       data: {
-        content: `pong (${Date.now() - (`${timestamp}000`)} ms)`,
+        content: `pong (${now - timestamp} ms)`,
       },
     };
   },
@@ -29,7 +36,6 @@ export const responses = {
   help: function help(req) {
     let temp = '';
     Object.values(commands).forEach((c) => {
-      // temp = temp + '/' + c.name + ' - ' + c.description + '\n'
       temp = `${temp}/${c.name} - ${c.description}\n`;
     });
     return {
