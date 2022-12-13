@@ -1,4 +1,5 @@
 import questions from './questions.json' assert { type: 'json' };
+import information from './info.json' assert { type: 'json' };
 
 export const commands = {
   PING_COMMAND: {
@@ -16,6 +17,12 @@ export const commands = {
   QOTD_COMMAND: {
     name: 'qotd',
     description: 'Asks a question of the day',
+    type: 1,
+  },
+
+  INFO_COMMAND: {
+    name: 'info',
+    description: 'Displays some information about me!',
     type: 1,
   },
 };
@@ -43,12 +50,19 @@ export const responses = {
   help: function help(req) {
     let temp = '';
     Object.values(commands).forEach((c) => {
-      temp = `${temp}/${c.name} - ${c.description}\n`;
+      temp = `${temp}\`/${c.name}\` - ${c.description}\n`;
     });
     return {
       type: 4,
       data: {
-        content: temp,
+        embeds: [
+          {
+            title: 'Here is a list of commands to help you:',
+            type: 'rich',
+            description: temp,
+            color: 0x5865F2,
+          },
+        ],
       },
     };
   },
@@ -65,6 +79,34 @@ export const responses = {
             type: 'rich',
             description: question,
             color: 0x5865F2,
+          },
+        ],
+      },
+    };
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  info: function info(req) {
+    const Info = information[0];
+    const Bio = information[1];
+    return {
+      type: 4,
+      data: {
+        embeds: [
+          {
+            title: 'Hello! My name is IrisBot!',
+            type: 'rich',
+            description: Info,
+            color: 0x5865F2,
+            fields: [
+              {
+                name: 'About My Creators',
+                value: Bio,
+              },
+            ],
+            footer: {
+              text: 'Made by Haley & Evan',
+            },
           },
         ],
       },
