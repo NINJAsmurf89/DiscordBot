@@ -2,7 +2,9 @@
 import 'dotenv/config';
 import express from 'express';
 import { VerifyDiscordRequest, HasGuildCommands } from './utils.js';
-import { commands, responses } from './commands.js';
+import * as commandObjects from './commands.js';
+import * as applicationCommands from './interactions/application-commands.js';
+import * as messageComponents from './interactions/message-components.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,14 +17,21 @@ app.post('/interactions', async (req, res) => {
   // eslint-disable-next-line no-unused-vars
   const { type, id, data } = req.body;
 
-  if (type === 1) { // PING_COMMAND = 1
-    return res.send({ type: 1 });
-  }
-
-  if (type === 2) { // APPLICATION_COMMAND = 2
-    const { name } = data;
+  if (type === 1) { // PING = 1
     try {
-      return res.send(responses[name](req));
+      return res.send({ type: 1 });
+    } catch (err) {
+      console.error(err);
+    }
+  } else if (type === 2) { // APPLICATION_COMMAND = 2
+    try {
+      return res.send(applicationCommands[data.name](req));
+    } catch (err) {
+      console.error(err);
+    }
+  } else if (type === 3) { // MESSAGE_COMPONENT = 3
+    try {
+      return res.send(messageComponents[data.custom_id](req));
     } catch (err) {
       console.error(err);
     }
@@ -32,6 +41,6 @@ app.post('/interactions', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, commands);
+  HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, commandObjects);
   console.log('Listening on port', PORT);
 });
