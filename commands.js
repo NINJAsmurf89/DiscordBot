@@ -1,6 +1,6 @@
 export const PING_COMMAND = {
   name: 'ping',
-  description: 'Says Pong',
+  description: 'Says pong',
   type: 1,
 };
 
@@ -24,6 +24,6 @@ export const INFO_COMMAND = {
 
 export const BUTTON_COMMAND = {
   name: 'button',
-  description: '',
+  description: 'Test button command',
   type: 1,
 };

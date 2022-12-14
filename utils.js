@@ -59,19 +59,30 @@ async function UninstallGuildCommand(appId, guildId, commandId) {
   }
 }
 
+async function UpdateGuildCommand(appId, guildId, commandId, command) {
+  const endpoint = `applications/${appId}/guilds/${guildId}/commands/${commandId}`;
+  try {
+    await DiscordRequest(endpoint, { method: 'PATCH', body: command });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 // Checks for a command
-async function HasGuildCommand(appId, guildId, installedNames, command) {
+async function HasGuildCommand(appId, guildId, installedNames, installedCommands, command) {
   if (!installedNames.includes(command.name)) {
     console.log(`Installing "${command.name}"`);
     InstallGuildCommand(appId, guildId, command);
   } else {
-    console.log(`"${command.name}" command already installed`);
+    console.log(`Updating "${command.name}" command`);
+    const commandId = installedCommands[installedNames.indexOf(command.name)].id;
+    UpdateGuildCommand(appId, guildId, commandId, command);
   }
 }
 
 async function HasDiscontinuedGuildCommand(appId, guildId, localNames, command) {
   if (!localNames.includes(command.name)) {
-    console.log(`Uninstalling "${command.name}"`);
+    console.log(`Uninstalling "${command.name}" command`);
     UninstallGuildCommand(appId, guildId, command.id);
   }
 }
@@ -92,7 +103,9 @@ export async function HasGuildCommands(appId, guildId, commands) {
       const localNames = Object.values(commands).map((c) => c.name);
 
       data.forEach((c) => HasDiscontinuedGuildCommand(appId, guildId, localNames, c));
-      Object.values(commands).forEach((c) => HasGuildCommand(appId, guildId, installedNames, c));
+      Object.values(commands).forEach((c) => {
+        HasGuildCommand(appId, guildId, installedNames, data, c);
+      });
     }
   } catch (err) {
     console.error(err);
