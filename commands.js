@@ -21,3 +21,9 @@ export const INFO_COMMAND = {
   description: 'Displays some information about me!',
   type: 1,
 };
+
+export const BUTTON_COMMAND = {
+  name: 'button',
+  description: '',
+  type: 1,
+};

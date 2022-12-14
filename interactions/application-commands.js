@@ -83,3 +83,24 @@ export function info(req) {
     },
   };
 }
+
+export function button(req) {
+  return {
+    type: 4,
+    data: {
+      components: [
+        {
+          type: 1,
+          components: [
+            {
+              type: 2,
+              label: 'Click me!',
+              style: 1,
+              custom_id: 'button',
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
