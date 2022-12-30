@@ -27,3 +27,9 @@ export const BUTTON_COMMAND = {
   description: 'Test button command',
   type: 1,
 };
+
+export const MULTI_BUTTON_COMMAND = {
+  name: 'multibutton',
+  description: 'Test multi-button command',
+  type: 1,
+};

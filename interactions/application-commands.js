@@ -104,3 +104,35 @@ export function button(req) {
     },
   };
 }
+
+export function multibutton(req) {
+  return {
+    type: 4,
+    data: {
+      components: [
+        {
+          type: 1,
+          components: [
+            {
+              type: 2,
+              label: 'Button 1',
+              style: 3,
+              custom_id: 'button1',
+            },
+          ],
+        },
+        {
+          type: 1,
+          components: [
+            {
+              type: 2,
+              label: 'Button 2',
+              style: 4,
+              custom_id: 'button2',
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
