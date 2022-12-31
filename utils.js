@@ -111,3 +111,12 @@ export async function HasGuildCommands(appId, guildId, commands) {
     console.error(err);
   }
 }
+
+export async function ConfigureGuildMemberRole(guildId, userId, roleId, method) {
+  const endpoint = `guilds/${guildId}/members/${userId}/roles/${roleId}`;
+  try {
+    await DiscordRequest(endpoint, { method });
+  } catch (err) {
+    console.error(err);
+  }
+}
