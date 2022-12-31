@@ -120,3 +120,12 @@ export async function ConfigureGuildMemberRole(guildId, userId, roleId, method) 
     console.error(err);
   }
 }
+
+export async function ModifyGuildMember(guildId, userId, options) {
+  const endpoint = `/guilds/${guildId}/members/${userId}`;
+  try {
+    await DiscordRequest(endpoint, { method: 'PATCH', body: options });
+  } catch (err) {
+    console.error(err);
+  }
+}

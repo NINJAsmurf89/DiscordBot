@@ -33,3 +33,19 @@ export const MULTI_BUTTON_COMMAND = {
   description: 'Test multi-button command',
   type: 1,
 };
+
+export const NICKNAME_COMMAND = {
+  name: 'nickname',
+  description: 'Change your nickname',
+  type: 1,
+  options: [
+    {
+      type: 3,
+      name: 'nickname',
+      description: 'nickname',
+      required: true,
+      min_length: 1,
+      max_length: 32,
+    },
+  ],
+};

@@ -3,6 +3,7 @@
 import questions from '../questions.json' assert { type: 'json' };
 import information from '../info.json' assert { type: 'json' };
 import * as commands from '../commands.js';
+import { ModifyGuildMember } from '../utils.js';
 
 export function TimestampFromSnowFlake(snowflake) {
   // eslint-disable-next-line no-bitwise
@@ -133,6 +134,23 @@ export function multibutton(req) {
           ],
         },
       ],
+    },
+  };
+}
+
+export function nickname(req) {
+  const guildId = req.body.guild_id;
+  const userId = req.body.member.user.id;
+  const oldNick = req.body.member.nick;
+  const nick = req.body.data.options[0].value;
+
+  ModifyGuildMember(guildId, userId, { nick });
+
+  return {
+    type: 4,
+    data: {
+      content: oldNick ? `Changed nickname from ${oldNick} to ${nick}`
+        : `Set nickname to ${nick}`,
     },
   };
 }
