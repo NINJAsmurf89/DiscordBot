@@ -157,9 +157,9 @@ export function nickname(req) {
 
 export function role(req) {
   const guildId = req.body.guild_id;
-  const userId = req.data.options[0].options[0].value;
-  const roleId = req.data.options[0].options[1].value;
-  const method = req.data.options[0].name;
+  const userId = req.body.data.options[0].options[0].value;
+  const roleId = req.body.data.options[0].options[1].value;
+  const method = req.body.data.options[0].name;
 
   ConfigureGuildMemberRole(guildId, userId, roleId, method === 'remove' ? 'DELETE' : 'PUT');
 
