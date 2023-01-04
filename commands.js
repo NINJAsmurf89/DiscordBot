@@ -49,3 +49,50 @@ export const NICKNAME_COMMAND = {
     },
   ],
 };
+
+export const ROLE_COMMAND = {
+  name: 'role',
+  description: 'Add or remove a role on a given user',
+  type: 1,
+  options: [
+    {
+      name: 'add',
+      description: 'Add a role to a user',
+      // SUB_COMMAND
+      type: 1,
+      options: [
+        {
+          name: 'user',
+          description: 'Enter the user that you would like to add a role to',
+          type: 6,
+          required: true,
+        },
+        {
+          name: 'role',
+          description: 'Enter the role that you would like to add to the user',
+          type: 8,
+          required: true,
+        },
+      ],
+    },
+    {
+      name: 'remove',
+      description: 'Remove a role from a user',
+      type: 1,
+      options: [
+        {
+          name: 'user',
+          description: 'Enter the user that you would like to add a role to',
+          type: 6,
+          required: true,
+        },
+        {
+          name: 'role',
+          description: 'Enter the role that you would like to add to the user',
+          type: 8,
+          required: true,
+        },
+      ],
+    },
+  ],
+};

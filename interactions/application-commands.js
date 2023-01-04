@@ -3,7 +3,7 @@
 import questions from '../questions.json' assert { type: 'json' };
 import information from '../info.json' assert { type: 'json' };
 import * as commands from '../commands.js';
-import { ModifyGuildMember } from '../utils.js';
+import { ModifyGuildMember, ConfigureGuildMemberRole } from '../utils.js';
 
 export function TimestampFromSnowFlake(snowflake) {
   // eslint-disable-next-line no-bitwise
@@ -151,6 +151,25 @@ export function nickname(req) {
     data: {
       content: oldNick ? `Changed nickname from ${oldNick} to ${nick}`
         : `Set nickname to ${nick}`,
+    },
+  };
+}
+
+export function role(req) {
+  const guildId = req.body.guild_id;
+  const userId = req.data.options[0].options[0].value;
+  const roleId = req.data.options[0].options[1].value;
+  const method = req.data.options[0].name;
+
+  ConfigureGuildMemberRole(guildId, userId, roleId, method === 'remove' ? 'DELETE' : 'PUT');
+
+  return {
+    type: 4,
+    data: {
+      content: `Sucessfully ${method}ed <@&${roleId} ${method === 'remove' ? 'from'
+        : 'to'} <@${userId}`,
+      // eslint-disable-next-line no-bitwise
+      flags: 1 << 6,
     },
   };
 }
