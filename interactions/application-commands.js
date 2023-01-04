@@ -161,13 +161,15 @@ export function role(req) {
   const roleId = req.body.data.options[0].options[1].value;
   const method = req.body.data.options[0].name;
 
-  ConfigureGuildMemberRole(guildId, userId, roleId, method === 'remove' ? 'DELETE' : 'PUT');
+  ConfigureGuildMemberRole(guildId, userId, roleId, method === 'add' ? 'PUT'
+    : 'DELETE');
 
   return {
     type: 4,
     data: {
-      content: `Sucessfully ${method}ed <@&${roleId} ${method === 'remove' ? 'from'
-        : 'to'} <@${userId}`,
+      content: `Sucessfully ${method}${method === 'add' ? 'e'
+        : ''}d <@&${roleId}> ${method === 'add' ? 'to'
+        : 'from'} <@${userId}>`,
       // eslint-disable-next-line no-bitwise
       flags: 1 << 6,
     },
