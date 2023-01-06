@@ -1,8 +1,6 @@
-/* eslint-disable import/extensions */
-/* eslint-disable no-unused-vars */
-import questions from '../questions.json' assert { type: 'json' };
-import information from '../info.json' assert { type: 'json' };
-import * as commands from '../commands.js';
+import questions from '../../resources/questions.json' assert { type: 'json' };
+import information from '../../resources/info.json' assert { type: 'json' };
+import * as commands from '../commands/commands.js';
 import { ModifyGuildMember, ConfigureGuildMemberRole } from '../utils.js';
 
 export function TimestampFromSnowFlake(snowflake) {

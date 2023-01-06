@@ -3,7 +3,6 @@ import fetch from 'node-fetch';
 import { verifyKey } from 'discord-interactions';
 
 export function VerifyDiscordRequest(clientKey) {
-  // eslint-disable-next-line no-unused-vars
   return function verifyRequest(req, res, buf, encoding) {
     const signature = req.get('X-Signature-Ed25519');
     const timestamp = req.get('X-Signature-Timestamp');
@@ -76,7 +75,7 @@ async function HasGuildCommand(appId, guildId, installedNames, installedCommands
   } else {
     console.log(`Updating "${command.name}" command`);
     const commandId = installedCommands[installedNames.indexOf(command.name)].id;
-    UpdateGuildCommand(appId, guildId, commandId, command);
+    // UpdateGuildCommand(appId, guildId, commandId, command);
   }
 }
 

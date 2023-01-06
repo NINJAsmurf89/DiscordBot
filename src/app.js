@@ -1,10 +1,10 @@
-/* eslint-disable import/extensions */
 import 'dotenv/config';
 import express from 'express';
 import { VerifyDiscordRequest, HasGuildCommands } from './utils.js';
-import * as commandObjects from './commands.js';
+import * as commandObjects from './commands/commands.js';
 import * as applicationCommands from './interactions/application-commands.js';
 import * as messageComponents from './interactions/message-components.js';
+import '../sequelize/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,7 +14,6 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 app.get('/', async (req, res) => res.send('<h1>Hello, World!</h1>'));
 
 app.post('/interactions', async (req, res) => {
-  // eslint-disable-next-line no-unused-vars
   const { type, id, data } = req.body;
 
   if (type === 1) { // PING = 1

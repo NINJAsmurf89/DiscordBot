@@ -13,5 +13,8 @@
     "sourceType": "module"
   },
   "rules": {
+    "import/extensions": ["error", "ignorePackages"],
+    "no-unused-vars": "warn",
+    "camelcase":"warn"
   }
 }
