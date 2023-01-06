@@ -4,13 +4,13 @@ export async function button(req) {
   const message_id = req.body.message.id;
   const model = sequelize.models.button;
   const [instance, created] = await model.findOrCreate({ where: { message_id } });
-  const { count } = instance;
+  const count = instance.count + 1;
   await model.increment({ count: 1 }, { where: { message_id } });
 
   return {
     type: 4,
     data: {
-      content: `Button has been clicked ${count + 1} time${count > 1 ? 's' : ''}`,
+      content: `Button has been clicked ${count} time${count > 1 ? 's' : ''}`,
     },
   };
 }

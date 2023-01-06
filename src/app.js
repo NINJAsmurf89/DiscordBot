@@ -30,7 +30,7 @@ app.post('/interactions', async (req, res) => {
     }
   } else if (type === 3) { // MESSAGE_COMPONENT = 3
     try {
-      return res.send(messageComponents[data.custom_id](req));
+      return res.send(await messageComponents[data.custom_id](req));
     } catch (err) {
       console.error(err);
     }
