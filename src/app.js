@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import { InteractionType, InteractionResponseType } from './types.js';
 import { VerifyDiscordRequest, HasGuildCommands } from './utils.js';
 import * as commandObjects from './commands/commands.js';
 import * as applicationCommands from './interactions/application-commands.js';
@@ -16,19 +17,19 @@ app.get('/', async (req, res) => res.send('<h1>Hello, World!</h1>'));
 app.post('/interactions', async (req, res) => {
   const { type, id, data } = req.body;
 
-  if (type === 1) { // PING = 1
+  if (type === InteractionType.PING) {
     try {
-      return res.send({ type: 1 });
+      return res.send({ type: InteractionResponseType.PONG });
     } catch (err) {
       console.error(err);
     }
-  } else if (type === 2) { // APPLICATION_COMMAND = 2
+  } else if (type === InteractionType.APPLICATION_COMMAND) {
     try {
       return res.send(applicationCommands[data.name](req));
     } catch (err) {
       console.error(err);
     }
-  } else if (type === 3) { // MESSAGE_COMPONENT = 3
+  } else if (type === InteractionType.MESSAGE_COMPONENT) {
     try {
       return res.send(await messageComponents[data.custom_id](req));
     } catch (err) {

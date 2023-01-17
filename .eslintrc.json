@@ -13,8 +13,9 @@
     "sourceType": "module"
   },
   "rules": {
+    "camelcase":"warn",
     "import/extensions": ["error", "ignorePackages"],
-    "no-unused-vars": "warn",
-    "camelcase":"warn"
+    "no-bitwise": "warn",
+    "no-unused-vars": "warn"
   }
 }

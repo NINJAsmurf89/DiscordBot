@@ -2,9 +2,14 @@ import questions from '../../resources/questions.json' assert { type: 'json' };
 import information from '../../resources/info.json' assert { type: 'json' };
 import * as commands from '../commands/commands.js';
 import { ModifyGuildMember, ConfigureGuildMemberRole } from '../utils.js';
+import {
+  ButtonStyle,
+  ComponentType,
+  InteractionResponseType,
+  MessageFlag,
+} from '../types.js';
 
 export function TimestampFromSnowFlake(snowflake) {
-  // eslint-disable-next-line no-bitwise
   return Number(BigInt(snowflake) >> 22n) + 1420070400000;
 }
 
@@ -14,7 +19,7 @@ export function ping(req) {
   const timestamp = TimestampFromSnowFlake(req.body.id);
 
   return {
-    type: 4, // CHANNEL_MESSAGE_WITH_SOURCE
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: `pong (${now - timestamp} ms)`,
     },
@@ -27,7 +32,7 @@ export function help(req) {
     temp = `${temp}\`/${c.name}\` - ${c.description}\n`;
   });
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       embeds: [
         {
@@ -44,7 +49,7 @@ export function help(req) {
 export function qotd(req) {
   const question = questions[Math.floor(Math.random() * 500)];
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       embeds: [
         {
@@ -60,7 +65,7 @@ export function qotd(req) {
 
 export function info(req) {
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       embeds: [
         {
@@ -85,16 +90,16 @@ export function info(req) {
 
 export function button(req) {
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       components: [
         {
-          type: 1,
+          type: ComponentType.ACTION_ROW,
           components: [
             {
-              type: 2,
+              type: ComponentType.BUTTON,
               label: 'Click me!',
-              style: 1,
+              style: ButtonStyle.PRIMARY,
               custom_id: 'button',
             },
           ],
@@ -106,27 +111,27 @@ export function button(req) {
 
 export function multibutton(req) {
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       components: [
         {
-          type: 1,
+          type: ComponentType.ACTION_ROW,
           components: [
             {
-              type: 2,
+              type: ComponentType.BUTTON,
               label: 'Button 1',
-              style: 3,
+              style: ButtonStyle.SUCCESS,
               custom_id: 'button1',
             },
           ],
         },
         {
-          type: 1,
+          type: ComponentType.ACTION_ROW,
           components: [
             {
-              type: 2,
+              type: ComponentType.BUTTON,
               label: 'Button 2',
-              style: 4,
+              style: ButtonStyle.DANGER,
               custom_id: 'button2',
             },
           ],
@@ -145,7 +150,7 @@ export function nickname(req) {
   ModifyGuildMember(guildId, userId, { nick });
 
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: oldNick ? `Changed nickname from ${oldNick} to ${nick}`
         : `Set nickname to ${nick}`,
@@ -163,13 +168,12 @@ export function role(req) {
     : 'DELETE');
 
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: `Sucessfully ${method}${method === 'add' ? 'e'
         : ''}d <@&${roleId}> ${method === 'add' ? 'to'
         : 'from'} <@${userId}>`,
-      // eslint-disable-next-line no-bitwise
-      flags: 1 << 6,
+      flags: MessageFlag.EPHEMERAL,
     },
   };
 }

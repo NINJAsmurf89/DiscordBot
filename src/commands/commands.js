@@ -1,46 +1,41 @@
+import { ApplicationCommandOptionType } from '../types.js';
+
 export const PING_COMMAND = {
   name: 'ping',
   description: 'Says pong',
-  type: 1,
 };
 
 export const HELP_COMMAND = {
   name: 'help',
   description: 'Displays a list of commands to the user',
-  type: 1,
 };
 
 export const QOTD_COMMAND = {
   name: 'qotd',
   description: 'Asks a question of the day',
-  type: 1,
 };
 
 export const INFO_COMMAND = {
   name: 'info',
   description: 'Displays some information about me!',
-  type: 1,
 };
 
 export const BUTTON_COMMAND = {
   name: 'button',
   description: 'Test button command',
-  type: 1,
 };
 
 export const MULTI_BUTTON_COMMAND = {
   name: 'multibutton',
   description: 'Test multi-button command',
-  type: 1,
 };
 
 export const NICKNAME_COMMAND = {
   name: 'nickname',
   description: 'Change your nickname',
-  type: 1,
   options: [
     {
-      type: 3,
+      type: ApplicationCommandOptionType.STRING,
       name: 'nickname',
       description: 'nickname',
       required: true,
@@ -53,24 +48,22 @@ export const NICKNAME_COMMAND = {
 export const ROLE_COMMAND = {
   name: 'role',
   description: 'Add or remove a role on a given user',
-  type: 1,
   options: [
     {
       name: 'add',
       description: 'Add a role to a user',
-      // SUB_COMMAND
-      type: 1,
+      type: ApplicationCommandOptionType.SUB_COMMAND,
       options: [
         {
           name: 'user',
           description: 'Enter the user that you would like to add a role to',
-          type: 6,
+          type: ApplicationCommandOptionType.USER,
           required: true,
         },
         {
           name: 'role',
           description: 'Enter the role that you would like to add to the user',
-          type: 8,
+          type: ApplicationCommandOptionType.ROLE,
           required: true,
         },
       ],
@@ -78,18 +71,18 @@ export const ROLE_COMMAND = {
     {
       name: 'remove',
       description: 'Remove a role from a user',
-      type: 1,
+      type: ApplicationCommandOptionType.SUB_COMMAND,
       options: [
         {
           name: 'user',
           description: 'Enter the user that you would like to add a role to',
-          type: 6,
+          type: ApplicationCommandOptionType.USER,
           required: true,
         },
         {
           name: 'role',
           description: 'Enter the role that you would like to add to the user',
-          type: 8,
+          type: ApplicationCommandOptionType.ROLE,
           required: true,
         },
       ],

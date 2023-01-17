@@ -1,3 +1,4 @@
+import { InteractionResponseType } from '../types.js';
 import sequelize from '../../sequelize/index.js';
 
 export async function button(req) {
@@ -8,7 +9,7 @@ export async function button(req) {
   await model.increment({ count: 1 }, { where: { message_id } });
 
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: `Button has been clicked ${count} time${count > 1 ? 's' : ''}`,
     },
@@ -17,7 +18,7 @@ export async function button(req) {
 
 export function button1(req) {
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: 'You pressed button 1!',
     },
@@ -26,7 +27,7 @@ export function button1(req) {
 
 export function button2(req) {
   return {
-    type: 4,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: 'You pressed button 2!',
     },
