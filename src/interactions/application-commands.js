@@ -99,7 +99,7 @@ export function button(req) {
             {
               type: ComponentType.BUTTON,
               label: 'Click me!',
-              style: ButtonStyle.PRIMARY,
+              style: ButtonStyle.SUCCESS,
               custom_id: 'button',
             },
           ],
