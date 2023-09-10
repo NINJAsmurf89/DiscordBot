@@ -2,20 +2,28 @@ import 'dotenv/config';
 import fetch from 'node-fetch';
 import { verifyKey } from 'discord-interactions';
 
-export function VerifyDiscordRequest(clientKey) {
-  return function verifyRequest(req, res, buf, encoding) {
-    const signature = req.get('X-Signature-Ed25519');
-    const timestamp = req.get('X-Signature-Timestamp');
+export function processRequest(req, res, next) {
+  if (req.is('application/json')) {
+    next();
+  } else {
+    res.status(400).send('Bad request');
+  }
+}
 
-    const isValidRequest = verifyKey(buf, signature, timestamp, clientKey);
-    if (!isValidRequest) {
-      res.status(401).send('Bad request signature');
-      throw new Error('Bad request signature');
-    }
-  };
+export function verifyRequest(req, res, buf, encoding) {
+  const clientKey = process.env.PUBLIC_KEY;
+  const signature = req.get('X-Signature-Ed25519');
+  const timestamp = req.get('X-Signature-Timestamp');
+
+  const isValidRequest = verifyKey(buf, signature, timestamp, clientKey);
+  if (!isValidRequest) {
+    res.status(401).send('Bad request signature');
+    throw new Error('Bad request signature');
+  }
 }
 
 async function DiscordRequest(endpoint, options) {
+  if (process.env.NODE_ENV === 'development') return null;
   // append endpoint to root API URL
   const url = `https://discord.com/api/v10/${endpoint}`;
   // Stringify payloads
@@ -121,7 +129,7 @@ export async function ConfigureGuildMemberRole(guildId, userId, roleId, method) 
 }
 
 export async function ModifyGuildMember(guildId, userId, options) {
-  const endpoint = `/guilds/${guildId}/members/${userId}`;
+  const endpoint = `guilds/${guildId}/members/${userId}`;
   try {
     await DiscordRequest(endpoint, { method: 'PATCH', body: options });
   } catch (err) {
