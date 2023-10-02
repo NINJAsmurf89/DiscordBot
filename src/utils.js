@@ -1,6 +1,15 @@
 import 'dotenv/config';
 import fetch from 'node-fetch';
 import { verifyKey } from 'discord-interactions';
+import logger from '../logger/logger.js';
+
+export function logRequest(req, res, next) {
+  const {
+    method, originalUrl, protocol, headers,
+  } = req;
+  logger.Info(method, originalUrl, protocol, headers);
+  next();
+}
 
 export function processRequest(req, res, next) {
   if (req.is('application/json')) {
@@ -41,7 +50,7 @@ async function DiscordRequest(endpoint, options) {
   // throw API errors
   if (!res.ok) {
     const data = await res.json();
-    console.log(res.status);
+    logger.Info(res.status);
     throw new Error(JSON.stringify(data));
   }
   // return original response
@@ -53,7 +62,7 @@ async function InstallGuildCommand(appId, guildId, command) {
   try {
     await DiscordRequest(endpoint, { method: 'POST', body: command });
   } catch (err) {
-    console.log(err);
+    logger.Error(err);
   }
 }
 
@@ -62,7 +71,7 @@ async function UninstallGuildCommand(appId, guildId, commandId) {
   try {
     await DiscordRequest(endpoint, { method: 'DELETE' });
   } catch (err) {
-    console.log(err);
+    logger.Error(err);
   }
 }
 
@@ -71,17 +80,17 @@ async function UpdateGuildCommand(appId, guildId, commandId, command) {
   try {
     await DiscordRequest(endpoint, { method: 'PATCH', body: command });
   } catch (err) {
-    console.log(err);
+    logger.Error(err);
   }
 }
 
 // Checks for a command
 async function HasGuildCommand(appId, guildId, installedNames, installedCommands, command) {
   if (!installedNames.includes(command.name)) {
-    console.log(`Installing "${command.name}"`);
+    logger.Info(`Installing "${command.name}"`);
     InstallGuildCommand(appId, guildId, command);
   } else {
-    console.log(`Updating "${command.name}" command`);
+    logger.Info(`Updating "${command.name}" command`);
     const commandId = installedCommands[installedNames.indexOf(command.name)].id;
     // UpdateGuildCommand(appId, guildId, commandId, command);
   }
@@ -89,7 +98,7 @@ async function HasGuildCommand(appId, guildId, installedNames, installedCommands
 
 async function HasDiscontinuedGuildCommand(appId, guildId, localNames, command) {
   if (!localNames.includes(command.name)) {
-    console.log(`Uninstalling "${command.name}" command`);
+    logger.Info(`Uninstalling "${command.name}" command`);
     UninstallGuildCommand(appId, guildId, command.id);
   }
 }
@@ -115,7 +124,7 @@ export async function HasGuildCommands(appId, guildId, commands) {
       });
     }
   } catch (err) {
-    console.error(err);
+    logger.Error(err);
   }
 }
 
@@ -124,7 +133,7 @@ export async function ConfigureGuildMemberRole(guildId, userId, roleId, method) 
   try {
     await DiscordRequest(endpoint, { method });
   } catch (err) {
-    console.error(err);
+    logger.Error(err);
   }
 }
 
@@ -133,6 +142,6 @@ export async function ModifyGuildMember(guildId, userId, options) {
   try {
     await DiscordRequest(endpoint, { method: 'PATCH', body: options });
   } catch (err) {
-    console.error(err);
+    logger.Error(err);
   }
 }

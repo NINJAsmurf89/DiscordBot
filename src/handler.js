@@ -1,6 +1,7 @@
 import * as applicationCommands from './interactions/application-commands.js';
 import * as messageComponents from './interactions/message-components.js';
 import { InteractionType, InteractionResponseType } from './types.js';
+import logger from '../logger/logger.js';
 
 export default async function handleInteraction(req, res) {
   const { type, id, data } = req.body;
@@ -10,7 +11,7 @@ export default async function handleInteraction(req, res) {
       try {
         res.send({ type: InteractionResponseType.PONG });
       } catch (err) {
-        console.error(err);
+        logger.Error(err);
         res.send({ error: err });
       }
       break;
@@ -18,7 +19,7 @@ export default async function handleInteraction(req, res) {
       try {
         res.send(applicationCommands[data.name](req));
       } catch (err) {
-        console.error(err);
+        logger.Error(err);
         res.send({ error: err });
       }
       break;
@@ -26,7 +27,7 @@ export default async function handleInteraction(req, res) {
       try {
         res.send(await messageComponents[data.custom_id](req));
       } catch (err) {
-        console.error(err);
+        logger.Error(err);
         res.send({ error: err });
       }
       break;
