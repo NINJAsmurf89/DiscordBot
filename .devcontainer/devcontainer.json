@@ -19,7 +19,8 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"dbaeumer.vscode-eslint",
-				"Postman.postman-for-vscode"
+				"Postman.postman-for-vscode",
+				"github.vscode-pull-request-github"
 			]
 		}
 	}
